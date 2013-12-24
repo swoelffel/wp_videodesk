@@ -1,0 +1,156 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VideoDesk Integration v1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2013-12-23 11:53:01+0000\n"
+"Last-Translator: jladoire <jladoire@castelis.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: VideoDesk.php:61
+#: VideoDesk.php:113
+#@ videodesk_integration
+msgid "VideoDesk Configuration"
+msgstr "VideoDesk Configuration"
+
+#: VideoDesk.php:74
+#@ videodesk_integration
+msgid "Configuration de VideoDesk"
+msgstr "VideoDesk's Configuration"
+
+#: VideoDesk.php:76
+#@ videodesk_integration
+msgid "UID"
+msgstr "UID"
+
+#: VideoDesk.php:77
+#@ videodesk_integration
+msgid "Affichage"
+msgstr "Display"
+
+#: VideoDesk.php:78
+#@ videodesk_integration
+msgid "Périmètre d'affichage"
+msgstr "Display perimeter"
+
+#: VideoDesk.php:82
+#@ videodesk_integration
+msgid "Affichage WooCommerce"
+msgstr "WooCommerce display"
+
+#: VideoDesk.php:84
+#@ videodesk_integration
+msgid "Exclusivement sur"
+msgstr "Only on"
+
+#: VideoDesk.php:134
+#@ videodesk_integration
+msgid "Activé"
+msgstr "Enabled"
+
+#: VideoDesk.php:138
+#@ videodesk_integration
+msgid "Désactivé"
+msgstr "Disabled"
+
+#: VideoDesk.php:158
+#@ videodesk_integration
+msgid "Afficher sur toutes les pages"
+msgstr "Display on all pages"
+
+#: VideoDesk.php:162
+#@ videodesk_integration
+msgid "Afficher sur les pages suivantes"
+msgstr "Display on the following pages"
+
+#: VideoDesk.php:197
+#@ videodesk_integration
+msgid "Règle d'exécution"
+msgstr "Execution rule"
+
+#: VideoDesk.php:202
+#: VideoDesk.php:204
+#: VideoDesk_WooCommerce.php:34
+#: VideoDesk_WooCommerce.php:103
+#: VideoDesk_WooCommerce.php:124
+#@ videodesk_integration
+msgid "OU"
+msgstr "OR"
+
+#: VideoDesk.php:206
+#: VideoDesk.php:208
+#: VideoDesk_WooCommerce.php:46
+#: VideoDesk_WooCommerce.php:121
+#: VideoDesk_WooCommerce.php:122
+#@ videodesk_integration
+msgid "ET"
+msgstr "AND"
+
+#: VideoDesk.php:218
+#@ videodesk_integration
+msgid "Si le montant du panier dépasse"
+msgstr "If the cart amount exceeds"
+
+#: VideoDesk.php:230
+#@ videodesk_integration
+msgid "Si le montant d'un produit du panier dépasse"
+msgstr "If the amount of a product from the cart exceeds"
+
+#: VideoDesk.php:242
+#@ videodesk_integration
+msgid "Si le panier contient au moins"
+msgstr "If the cart contain at least"
+
+#: VideoDesk.php:245
+#@ videodesk_integration
+msgid "produits"
+msgstr "products"
+
+#: VideoDesk.php:254
+#@ videodesk_integration
+msgid "Si l'utilisateur est connecté"
+msgstr "If user is connected"
+
+#: VideoDesk.php:265
+#@ videodesk_integration
+msgid "Si la catégorie courrante est"
+msgstr "If the current product category is"
+
+#: VideoDesk.php:288
+#@ videodesk_integration
+msgid "Vous n'avez actuellement crée aucune catégorie de produit. La limitation par catégorie n'est donc pas disponible"
+msgstr "You didn't create any product category. The category limitation isn't available so"
+
+#: VideoDesk_WooCommerce.php:198
+#@ videodesk_integration
+msgid "Le plugin VideoDesk doit être activé pour l'activation de VideoDesk WooCommerce"
+msgstr "The VideoDesk plugin has to be activated to activate VideoDesk WooCommerce"
+
+#: VideoDesk_WooCommerce.php:203
+#@ videodesk_integration
+msgid "Le plugin WooCommerce doit être activé pour l'activation de VideoDesk WooCommerce"
+msgstr "The WooCommerce plugin has to be activated to activate VideoDesk WooCommerce"
+
+#: VideoDesk.php:147
+#@ videodesk_integration
+msgid "Si l'utilisateur a passé plus de"
+msgstr "If user has spend more than"
+
+#: VideoDesk.php:148
+#@ videodesk_integration
+msgid "minutes sur la boutique"
+msgstr "minutes on the website"
+

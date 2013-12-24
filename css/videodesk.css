@@ -1,0 +1,10 @@
+#icon-videodesk.icon32
+{
+	background-image: url("../img/logo.png");
+}
+
+td.configvideodesk
+{
+	padding: 0px;
+	padding-right: 5px;
+}
