@@ -16,6 +16,10 @@ Tested up to WordPress 3.9 Nightly build
 ***
 
 ## Changelog
+####1.1.1
+* Remove some unneeded code
+* Code cleanup
+
 ####1.1
 * New options
 * Update from older versions

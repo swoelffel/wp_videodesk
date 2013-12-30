@@ -3,14 +3,14 @@
 	Plugin Name: VideoDesk Integration
 	Description: Add the VideoDesk script
 	Author: JLA (Castelis)
-	Version: 1.1
+	Version: 1.1.1
 	Author URI: http://openboutique.fr
 	*/
 
 	if(!defined('ABSPATH'))
 		exit;
 
-	define("VIDEODESK_VERSION", "1.1");
+	define("VIDEODESK_VERSION", "1.1.1");
 
 	class OB_VideoDesk
 	{
@@ -19,9 +19,6 @@
 		/* Constructeur */
 		public function __construct()
 		{
-			if( $this->get_config('version') != VIDEODESK_VERSION )
-				$this->update();
-
 			load_plugin_textdomain('videodesk_integration', false, dirname(plugin_basename(__FILE__)).'/lang/');
 			include_once( ABSPATH.'wp-admin/includes/plugin.php' );
 			if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
@@ -29,6 +26,9 @@
 				include_once( plugin_dir_path( __FILE__ )."VideoDesk_WooCommerce.php" );
 				$this->videodesk_woocommerce = new OB_VideoDesk_WooCommerce($this);
 			}
+
+			if( $this->get_config('version') != VIDEODESK_VERSION )
+				$this->update();
 
 			add_action('admin_menu', 					array($this, 'action_admin_menu') );
 			add_action('admin_enqueue_scripts', 		array($this, 'action_admin_enqueue_scripts') );
@@ -57,14 +57,18 @@
 			else
 				$version = '1.0';
 
-			$config = $this->update_from($version);
+			$config = $this->get_update_from($version);
 			update_option('videodesk_config', $config);
 		}
 
-		public function update_from($version)
+		public function get_update_from($version)
 		{
 			switch( $version )
 			{
+				case '1.1':
+					$new_config = $this->get_config();
+					$new_config['version'] = VIDEODESK_VERSION;
+					return $new_config;
 				case '1.0':
 					$new_config = array(
 						"version"			=> VIDEODESK_VERSION,
@@ -80,17 +84,7 @@
 					if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 					{
 						$new_config['conditions']['connected'] = $this->get_config()['conditions']['est_connecte'];
-						$new_config_woocommerce = array(
-							"woocommerce"=> array(
-								"type"				=> $this->get_config()['conditions']['type'],
-								"montant_panier" 	=> $this->get_config()['conditions']['montant_panier'],
-								"montant_produit" 	=> $this->get_config()['conditions']['montant_produit'],
-								"quantite_produit"	=> $this->get_config()['conditions']['quantite_produit'],
-								"category"			=> array(
-									"list_category_allowed"	=> $this->get_config()['conditions']['category']['list_category_allowed'],
-								)
-							)
-						);
+						$new_config_woocommerce = $this->videodesk_woocommerce->get_update_from($version);
 						$new_config = array_merge($new_config, $new_config_woocommerce);
 					}
 					return $new_config;
