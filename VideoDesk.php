@@ -3,12 +3,14 @@
 	Plugin Name: VideoDesk Integration
 	Description: Add the VideoDesk script
 	Author: JLA (Castelis)
-	Version: 1.0
+	Version: 1.1
 	Author URI: http://openboutique.fr
 	*/
 
 	if(!defined('ABSPATH'))
 		exit;
+
+	define("VIDEODESK_VERSION", "1.1");
 
 	class OB_VideoDesk
 	{
@@ -17,6 +19,9 @@
 		/* Constructeur */
 		public function __construct()
 		{
+			if( $this->get_config('version') != VIDEODESK_VERSION )
+				$this->update();
+
 			load_plugin_textdomain('videodesk_integration', false, dirname(plugin_basename(__FILE__)).'/lang/');
 			include_once( ABSPATH.'wp-admin/includes/plugin.php' );
 			if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
@@ -47,10 +52,61 @@
 
 		public function update()
 		{
+			if( isset($this->get_config()['version']) )
+				$version = $this->get_config()['version'];
+			else
+				$version = '1.0';
+
+			$config = $this->update_from($version);
+			update_option('videodesk_config', $config);
+		}
+
+		public function update_from($version)
+		{
+			switch( $version )
+			{
+				case '1.0':
+					$new_config = array(
+						"version"			=> VIDEODESK_VERSION,
+						"uid" 				=> $this->get_config()['uid'],
+						"active" 			=> $this->get_config()['active'],
+						"list_pages_allowed"=> $this->get_config()['affichage']['list_pages_allowed'],
+						"conditions"		=> array (
+							"time" 				=> $this->get_config()['time'],
+							"connected"			=> "0",
+							"connected_admin"	=> "0"
+						)
+					);
+					if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
+					{
+						$new_config['conditions']['connected'] = $this->get_config()['conditions']['est_connecte'];
+						$new_config_woocommerce = array(
+							"woocommerce"=> array(
+								"type"				=> $this->get_config()['conditions']['type'],
+								"montant_panier" 	=> $this->get_config()['conditions']['montant_panier'],
+								"montant_produit" 	=> $this->get_config()['conditions']['montant_produit'],
+								"quantite_produit"	=> $this->get_config()['conditions']['quantite_produit'],
+								"category"			=> array(
+									"list_category_allowed"	=> $this->get_config()['conditions']['category']['list_category_allowed'],
+								)
+							)
+						);
+						$new_config = array_merge($new_config, $new_config_woocommerce);
+					}
+					return $new_config;
+				default:
+					return $this->get_default_config();
+			}
+		}
+
+		public function update_woocommerce()
+		{
 			include_once( plugin_dir_path(__FILE__)."VideoDesk_WooCommerce.php" );
 			$this->videodesk_woocommerce = new OB_VideoDesk_WooCommerce($this);
 
-			$this->activate();
+			$config = $this->get_config();
+			$new_config = array_merge($config, $this->videodesk_woocommerce->get_default_config());
+			update_option('videodesk_config', $new_config);
 		}
 		/* Installation, Désinstallation, Update */
 
@@ -75,6 +131,7 @@
 
 			add_settings_field('videodesk_uid', __('UID', 'videodesk_integration'), array($this, 'callback_config_uid'), 'videodesk_config', 'setting_section_id');
 			add_settings_field('videodesk_active', __('Affichage', 'videodesk_integration'), array($this, 'callback_config_active'), 'videodesk_config', 'setting_section_id');
+			add_settings_field('videodesk_conditions', __('Conditions d\'affichage', 'videodesk_integration'), array($this, 'callback_config_conditions'), 'videodesk_config', 'setting_section_id');
 			add_settings_field('videodesk_affichage', __('Périmètre d\'affichage', 'videodesk_integration'), array($this, 'callback_config_display'), 'videodesk_config', 'setting_section_id');
 
 			if( class_exists("Woocommerce") )
@@ -131,35 +188,51 @@
 				<img src='".plugins_url('/img/displayed.png', __FILE__)."'/><input type='radio' name='videodesk_config[active]' value='1' ";
 				if( $this->get_config('active') )
 					echo "checked";
-				echo "																										> <span>".__('Activé', 'videodesk_integration')."</span><br/>
+				echo "> <span>".__('Activé', 'videodesk_integration')."</span><br/>
 				<img src='".plugins_url('/img/not-displayed.png', __FILE__)."'/><input type='radio' name='videodesk_config[active]' value='0' ";
 				if( !$this->get_config('active') )
 					echo "checked";
-				echo "																											> <span>".__('Désactivé', 'videodesk_integration')."</span>
-			";
+				echo "> <span>".__('Désactivé', 'videodesk_integration')."</span>";
 			/* Enabled/Disabled */
+		}
 
-
+		public function callback_config_conditions()
+		{
 			/* Time check */
-			echo "<br/><input type='checkbox' name='videodesk_config[time]' value='1'";
-			if( $this->get_config('time') > 0 )
+			echo "<br/><input type='checkbox' name='videodesk_config[conditions_time]' value='1'";
+			if( $this->get_config('conditions', 'time') > 0 )
 				echo " checked";
-			echo "><span> ".__('Si l\'utilisateur a passé plus de', 'videodesk_integration')." </span><input type='text' name='videodesk_config[time_val]' value='".$this->get_config('time')."'";
+			echo "><span> ".__('Si l\'utilisateur a passé plus de', 'videodesk_integration')." </span><input type='text' name='videodesk_config[conditions_time_val]' value='".$this->get_config('conditions', 'time')."'";
 			echo "><span> ".__('minutes sur la boutique', 'videodesk_integration')."</span>";
 			/* Time check */
+
+			/* User connected */
+			echo "<br/><input type='checkbox' name='videodesk_config[conditions_connected]' value='1'";
+			if( $this->get_config('conditions', 'connected') == 1 )
+				echo " checked";
+			echo " ><span> ".__('Si l\'utilisateur est connecté', 'videodesk_integration')."</span>";
+			/* User connected */
+
+			/* User connected as Administrator */
+			echo "<br/><input type='checkbox' name='videodesk_config[conditions_connected_admin]' value='1'";
+			if( $this->get_config('conditions', 'connected_admin') == 1 )
+				echo " checked";
+			echo " ><span> ".__('Si l\'utilisateur est connecté en tant qu\'administrateur', 'videodesk_integration')."</span>";
+			/* User connected as Administrator */
 		}
 
 		public function callback_config_display()
 		{
+			$pages_allowed = $this->get_config('list_pages_allowed');
 			echo "
-				<input type='radio' name='videodesk_config[affiche_type]' value='1' ";
-				if( $this->get_config('affichage', 'type') )
-					echo "checked";
-				echo "																> <span>".__('Afficher sur toutes les pages', 'videodesk_integration')."</span><br/>
-				<input type='radio' name='videodesk_config[affiche_type]' value='0' ";
-				if( !$this->get_config('affichage', 'type') )
-					echo "checked";
-				echo "																> <span>".__('Afficher sur les pages suivantes', 'videodesk_integration')." : </span>
+				<input type='radio' name='videodesk_config[display_type]' value='1' ";
+			if( empty($pages_allowed) )
+				echo "checked";
+			echo "> <span>".__('Afficher sur toutes les pages', 'videodesk_integration')."</span><br/>
+				<input type='radio' name='videodesk_config[display_type]' value='0' ";
+			if( !empty($pages_allowed) )
+				echo "checked";
+			echo "> <span>".__('Afficher sur les pages suivantes', 'videodesk_integration')." : </span>
 			";
 			
 			$list_pages = get_pages();
@@ -174,7 +247,7 @@
 
 				echo "<td class='configvideodesk'>
 						<input type='checkbox' name='videodesk_config[affiche_page_".$page->ID."]' value='".$page->ID."'";
-				if( $this->is_page_allowed($page->ID) )
+				if( !empty($pages_allowed) && $this->is_page_allowed($page->ID) )
 					echo " checked";
 				echo "> ".$page->post_title."</td>";
 
@@ -199,11 +272,11 @@
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				echo " disabled";
 			echo 	"><option";
-			if( $this->get_config('conditions', 'type') == __('OU', 'videodesk_integration') )
+			if( $this->get_config('woocommerce', 'type') == __('OU', 'videodesk_integration') )
 				echo " selected";
 			echo 	">".__('OU', 'videodesk_integration')."
 					<option";
-			if( $this->get_config('conditions', 'type') == __('ET', 'videodesk_integration') )
+			if( $this->get_config('woocommerce', 'type') == __('ET', 'videodesk_integration') )
 				echo " selected";
 			echo 	">".__('ET', 'videodesk_integration')."
 				</select>";
@@ -213,7 +286,7 @@
 			echo "<br/><input type='checkbox' name='videodesk_config[woocommerce_montant_panier]' value='1'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				echo " disabled";
-			else if( $this->get_config('conditions', 'montant_panier') > 0 )
+			else if( $this->get_config('woocommerce', 'montant_panier') > 0 )
 				echo " checked";
 			echo "><span> ".__('Si le montant du panier dépasse', 'videodesk_integration')." </span><input type='text' name='videodesk_config[woocommerce_montant_panier_val]' value='".$this->get_config('conditions', 'montant_panier')."'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
@@ -225,7 +298,7 @@
 			echo "<br/><input type='checkbox' name='videodesk_config[woocommerce_montant_produit]' value='1'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				echo " disabled";
-			else if( $this->get_config('conditions', 'montant_produit') > 0 )
+			else if( $this->get_config('woocommerce', 'montant_produit') > 0 )
 				echo " checked";
 			echo " ><span> ".__('Si le montant d\'un produit du panier dépasse', 'videodesk_integration')." </span><input type='text' name='videodesk_config[woocommerce_montant_produit_val]' value='".$this->get_config('conditions', 'montant_produit')."'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
@@ -237,23 +310,13 @@
 			echo "<br/><input type='checkbox' name='videodesk_config[woocommerce_quantite_produit]' value='1'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				echo " disabled";
-			else if( $this->get_config('conditions', 'quantite_produit') > 0 )
+			else if( $this->get_config('woocommerce', 'quantite_produit') > 0 )
 				echo " checked";
 			echo " ><span> ".__('Si le panier contient au moins', 'videodesk_integration')." </span><input type='text' name='videodesk_config[woocommerce_quantite_produit_val]' value='".$this->get_config('conditions', 'quantite_produit')."'";
 			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				echo " readonly";
 			echo " ><span> ".__('produits', 'videodesk_integration')."</span>";
 			/* Quantité Produit */
-
-			/* Utilisateur connecté */
-			echo "<br/><input type='checkbox' name='videodesk_config[woocommerce_utilisateur_connecte]' value='1'";
-			if( !is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
-				echo " disabled";
-			else if( $this->get_config('conditions', 'est_connecte') == 1 )
-				echo " checked";
-			echo " ><span> ".__('Si l\'utilisateur est connecté', 'videodesk_integration')."</span>";
-			/* Utilisateur connecté */
-
 
 			/* Catégorie courrante */
 			$args = array( 'taxonomy' => 'product_cat', 'hide_empty' => false );
@@ -300,18 +363,19 @@
 			if( isset( $input['active'] ) && $input['active'] == '0' )
 				$new_input['active'] = 0;
 
-			if( isset( $input['time'] ) && $input['time'] == 1 && isset($input['time_val']) && (int)$input['time_val'] > 0 )
-				$new_input['time'] = $input['time_val'];
+			if( isset( $input['conditions_time'] ) && $input['conditions_time'] == 1 && isset($input['conditions_time_val']) && (int)$input['conditions_time_val'] > 0 )
+				$new_input['conditions']['time'] = $input['conditions_time_val'];
 
+			if( isset( $input['conditions_connected'] ) && !empty($input['conditions_connected']) )
+				$new_input['conditions']['connected'] = "1";
+
+			if( isset( $input['conditions_connected_admin'] ) && !empty($input['conditions_connected_admin']) )
+				$new_input['conditions']['connected_admin'] = "1";
+	
 			$list_pages = get_pages();
 			foreach( $list_pages as $page )
-			{
 				if( isset($input['affiche_page_'.$page->ID]) )
-				{
-					$new_input['affichage']['list_pages_allowed'][$page->ID] = 1;
-					$new_input['affichage']['type'] = 0;
-				}
-			}
+					$new_input['list_pages_allowed'][$page->ID] = 1;
 
 			if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 				$new_input = array_merge( $new_input, $this->videodesk_woocommerce->callback_save_config($input) );
@@ -326,12 +390,14 @@
 		{
 			$array =
 				array(
-					"uid" 		=> "0",
-					"active" 	=> "1",
-					"time" 		=> "0",
-					"affichage"	=> array(
-						"type"				=> "1",
-						"list_pages_allowed"=> array()
+					"version"			=> VIDEODESK_VERSION,
+					"uid" 				=> "0",
+					"active" 			=> "1",
+					"list_pages_allowed"=> array(),
+					"conditions"		=> array (
+						"time" 				=> "0",
+						"connected"			=> "0",
+						"connected_admin"	=> "0"
 					)
 				);
 
@@ -345,21 +411,24 @@
 		{
 			switch( $param )
 			{
+				case 'version':
 				case 'uid':
-				case 'time':
+				case 'list_pages_allowed':
 					return $this->get_config()[$param];
 				case 'active':
 					return (int)$this->get_config()[$param];
-				case 'affichage':
+				case 'conditions':
 					switch( $param2 )
 					{
-						case 'type':
-						case 'list_pages_allowed':
-							return $this->get_config()[$param][$param2];
+						case 'time':
+						case 'connected':
+						case 'connected_admin':
+							return (int)$this->get_config()[$param][$param2];
 						default:
 							return 0;
 					}
-				case 'conditions':
+				
+				case 'woocommerce':
 					if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 						return $this->videodesk_woocommerce->get_config($param, $param2, $param3);
 					return 0;
@@ -373,7 +442,9 @@
 		/* Autres */
 		public function is_page_allowed($id)
 		{
-			$list = $this->get_config('affichage', 'list_pages_allowed');
+			$list = $this->get_config('list_pages_allowed');
+			if( empty($list) )
+				return true;
 			if( isset($list[$id]) )
 				return true;
 			return false;
@@ -399,13 +470,19 @@
 			if( $this->get_config('uid') == "0" )
 				return false;
 
-			if( $this->get_config('time') > 0 && $this->get_config('time') > $this->get_user_time() )
-				return false;
-
 			if( !$this->get_config('active') )
 				return false;
 
-			if( !$this->get_config('affichage', 'type') && !$this->is_page_allowed(get_the_ID()) )
+			if( $this->get_config('conditions', 'time') > 0 && $this->get_config('conditions', 'time') > $this->get_user_time() )
+				return false;
+
+			if( $this->get_config('conditions', 'connected_admin') && (!is_user_logged_in() || !current_user_can('manage_options')) )
+				return false;
+
+			if( $this->get_config('conditions', 'connected') && !is_user_logged_in() )
+				return false;
+
+			if( !$this->is_page_allowed(get_the_ID()) )
 				return false;
 
 			if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )

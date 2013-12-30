@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: VideoDesk Integration v1.0\n"
+"Project-Id-Version: VideoDesk Integration v1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-12-23 11:53:01+0000\n"
+"PO-Revision-Date: 2013-12-30 10:33:52+0000\n"
 "Last-Translator: jladoire <jladoire@castelis.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,137 +20,147 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: VideoDesk.php:61
-#: VideoDesk.php:113
+#: VideoDesk.php:119
+#: VideoDesk.php:172
 #@ videodesk_integration
 msgid "VideoDesk Configuration"
 msgstr "VideoDesk Configuration"
 
-#: VideoDesk.php:74
+#: VideoDesk.php:132
 #@ videodesk_integration
 msgid "Configuration de VideoDesk"
 msgstr "VideoDesk's Configuration"
 
-#: VideoDesk.php:76
+#: VideoDesk.php:134
 #@ videodesk_integration
 msgid "UID"
 msgstr "UID"
 
-#: VideoDesk.php:77
+#: VideoDesk.php:135
 #@ videodesk_integration
 msgid "Affichage"
 msgstr "Display"
 
-#: VideoDesk.php:78
+#: VideoDesk.php:137
 #@ videodesk_integration
 msgid "Périmètre d'affichage"
 msgstr "Display perimeter"
 
-#: VideoDesk.php:82
+#: VideoDesk.php:141
 #@ videodesk_integration
 msgid "Affichage WooCommerce"
 msgstr "WooCommerce display"
 
-#: VideoDesk.php:84
+#: VideoDesk.php:143
 #@ videodesk_integration
 msgid "Exclusivement sur"
 msgstr "Only on"
 
-#: VideoDesk.php:134
+#: VideoDesk.php:193
 #@ videodesk_integration
 msgid "Activé"
 msgstr "Enabled"
 
-#: VideoDesk.php:138
+#: VideoDesk.php:197
 #@ videodesk_integration
 msgid "Désactivé"
 msgstr "Disabled"
 
-#: VideoDesk.php:158
+#: VideoDesk.php:233
 #@ videodesk_integration
 msgid "Afficher sur toutes les pages"
 msgstr "Display on all pages"
 
-#: VideoDesk.php:162
+#: VideoDesk.php:237
 #@ videodesk_integration
 msgid "Afficher sur les pages suivantes"
 msgstr "Display on the following pages"
 
-#: VideoDesk.php:197
+#: VideoDesk.php:272
 #@ videodesk_integration
 msgid "Règle d'exécution"
 msgstr "Execution rule"
 
-#: VideoDesk.php:202
-#: VideoDesk.php:204
+#: VideoDesk.php:277
+#: VideoDesk.php:279
 #: VideoDesk_WooCommerce.php:34
-#: VideoDesk_WooCommerce.php:103
-#: VideoDesk_WooCommerce.php:124
+#: VideoDesk_WooCommerce.php:99
+#: VideoDesk_WooCommerce.php:119
 #@ videodesk_integration
 msgid "OU"
 msgstr "OR"
 
-#: VideoDesk.php:206
-#: VideoDesk.php:208
-#: VideoDesk_WooCommerce.php:46
-#: VideoDesk_WooCommerce.php:121
-#: VideoDesk_WooCommerce.php:122
+#: VideoDesk.php:281
+#: VideoDesk.php:283
+#: VideoDesk_WooCommerce.php:44
+#: VideoDesk_WooCommerce.php:116
+#: VideoDesk_WooCommerce.php:117
 #@ videodesk_integration
 msgid "ET"
 msgstr "AND"
 
-#: VideoDesk.php:218
+#: VideoDesk.php:293
 #@ videodesk_integration
 msgid "Si le montant du panier dépasse"
 msgstr "If the cart amount exceeds"
 
-#: VideoDesk.php:230
+#: VideoDesk.php:305
 #@ videodesk_integration
 msgid "Si le montant d'un produit du panier dépasse"
 msgstr "If the amount of a product from the cart exceeds"
 
-#: VideoDesk.php:242
+#: VideoDesk.php:317
 #@ videodesk_integration
 msgid "Si le panier contient au moins"
 msgstr "If the cart contain at least"
 
-#: VideoDesk.php:245
+#: VideoDesk.php:320
 #@ videodesk_integration
 msgid "produits"
 msgstr "products"
 
-#: VideoDesk.php:254
+#: VideoDesk.php:215
 #@ videodesk_integration
 msgid "Si l'utilisateur est connecté"
 msgstr "If user is connected"
 
-#: VideoDesk.php:265
+#: VideoDesk.php:330
 #@ videodesk_integration
 msgid "Si la catégorie courrante est"
 msgstr "If the current product category is"
 
-#: VideoDesk.php:288
+#: VideoDesk.php:353
 #@ videodesk_integration
 msgid "Vous n'avez actuellement crée aucune catégorie de produit. La limitation par catégorie n'est donc pas disponible"
 msgstr "You didn't create any product category. The category limitation isn't available so"
 
-#: VideoDesk_WooCommerce.php:198
+#: VideoDesk_WooCommerce.php:187
 #@ videodesk_integration
 msgid "Le plugin VideoDesk doit être activé pour l'activation de VideoDesk WooCommerce"
 msgstr "The VideoDesk plugin has to be activated to activate VideoDesk WooCommerce"
 
-#: VideoDesk_WooCommerce.php:203
+#: VideoDesk_WooCommerce.php:192
 #@ videodesk_integration
 msgid "Le plugin WooCommerce doit être activé pour l'activation de VideoDesk WooCommerce"
 msgstr "The WooCommerce plugin has to be activated to activate VideoDesk WooCommerce"
 
-#: VideoDesk.php:147
+#: VideoDesk.php:207
 #@ videodesk_integration
 msgid "Si l'utilisateur a passé plus de"
 msgstr "If user has spend more than"
 
-#: VideoDesk.php:148
+#: VideoDesk.php:208
 #@ videodesk_integration
 msgid "minutes sur la boutique"
 msgstr "minutes on the website"
+
+#: VideoDesk.php:136
+#@ videodesk_integration
+msgid "Conditions d'affichage"
+msgstr "Display conditions"
+
+#: VideoDesk.php:222
+#@ videodesk_integration
+msgid "Si l'utilisateur est connecté en tant qu'administrateur"
+msgstr "If user is connected as an administrator"
 
