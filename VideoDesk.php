@@ -3,14 +3,14 @@
 	Plugin Name: VideoDesk Integration
 	Description: Add the VideoDesk script
 	Author: JLA (Castelis)
-	Version: 1.1.1
+	Version: 1.1.2
 	Author URI: http://openboutique.fr
 	*/
 
 	if(!defined('ABSPATH'))
 		exit;
 
-	define("VIDEODESK_VERSION", "1.1.1");
+	define("VIDEODESK_VERSION", "1.1.2");
 
 	class OB_VideoDesk
 	{
@@ -52,8 +52,9 @@
 
 		public function update()
 		{
-			if( isset($this->get_config()['version']) )
-				$version = $this->get_config()['version'];
+			$config = $this->get_config();
+			if( isset($config['version']) )
+				$version = $config['version'];
 			else
 				$version = '1.0';
 
@@ -65,6 +66,7 @@
 		{
 			switch( $version )
 			{
+				case '1.1.1':
 				case '1.1':
 					$new_config = $this->get_config();
 					$new_config['version'] = VIDEODESK_VERSION;
