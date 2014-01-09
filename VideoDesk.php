@@ -3,14 +3,14 @@
 	Plugin Name: VideoDesk Integration
 	Description: Add the VideoDesk script
 	Author: JLA (Castelis)
-	Version: 1.1.2
+	Version: 1.1.3
 	Author URI: http://openboutique.fr
 	*/
 
 	if(!defined('ABSPATH'))
 		exit;
 
-	define("VIDEODESK_VERSION", "1.1.2");
+	define("VIDEODESK_VERSION", "1.1.3");
 
 	class OB_VideoDesk
 	{
@@ -64,28 +64,30 @@
 
 		public function get_update_from($version)
 		{
+			$config = $this->get_config();
 			switch( $version )
 			{
+				case '1.1.2':
 				case '1.1.1':
 				case '1.1':
-					$new_config = $this->get_config();
+					$new_config = $config;
 					$new_config['version'] = VIDEODESK_VERSION;
 					return $new_config;
 				case '1.0':
 					$new_config = array(
 						"version"			=> VIDEODESK_VERSION,
-						"uid" 				=> $this->get_config()['uid'],
-						"active" 			=> $this->get_config()['active'],
-						"list_pages_allowed"=> $this->get_config()['affichage']['list_pages_allowed'],
+						"uid" 				=> $config['uid'],
+						"active" 			=> $config['active'],
+						"list_pages_allowed"=> $config['affichage']['list_pages_allowed'],
 						"conditions"		=> array (
-							"time" 				=> $this->get_config()['time'],
+							"time" 				=> $config['time'],
 							"connected"			=> "0",
 							"connected_admin"	=> "0"
 						)
 					);
 					if( is_plugin_active('VideoDesk/VideoDesk_WooCommerce.php') )
 					{
-						$new_config['conditions']['connected'] = $this->get_config()['conditions']['est_connecte'];
+						$new_config['conditions']['connected'] = $config['conditions']['est_connecte'];
 						$new_config_woocommerce = $this->videodesk_woocommerce->get_update_from($version);
 						$new_config = array_merge($new_config, $new_config_woocommerce);
 					}
@@ -405,21 +407,25 @@
 
 		public function get_config($param = '', $param2 = '', $param3 = '')
 		{
+			$config = get_option('videodesk_config');
+			if( !$config )
+				return $this->get_default_config();
+
 			switch( $param )
 			{
 				case 'version':
 				case 'uid':
 				case 'list_pages_allowed':
-					return $this->get_config()[$param];
+					return $config[$param];
 				case 'active':
-					return (int)$this->get_config()[$param];
+					return (int)$config[$param];
 				case 'conditions':
 					switch( $param2 )
 					{
 						case 'time':
 						case 'connected':
 						case 'connected_admin':
-							return (int)$this->get_config()[$param][$param2];
+							return (int)$config[$param][$param2];
 						default:
 							return 0;
 					}
@@ -429,7 +435,7 @@
 						return $this->videodesk_woocommerce->get_config($param, $param2, $param3);
 					return 0;
 				default:
-					return get_option('videodesk_config');
+					return $config;
 			}
 		}
 		/* Configurations */
@@ -460,9 +466,6 @@
 
 		public function is_plugin_visible()
 		{
-			if( !$this->get_config() )
-				return false;
-
 			if( $this->get_config('uid') == "0" )
 				return false;
 

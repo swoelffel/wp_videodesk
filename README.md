@@ -16,6 +16,9 @@ Tested up to WordPress 3.9 Nightly build
 ***
 
 ## Changelog
+####1.1.3
+* Fix syntax error
+
 ####1.1.2
 * Fix update function
 
